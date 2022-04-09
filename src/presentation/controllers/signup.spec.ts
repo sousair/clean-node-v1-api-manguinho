@@ -3,29 +3,22 @@ import { InvalidParamError } from './../errors/invalid-param-error';
 import { EmailValidator } from './../protocols/email-validator';
 import { SignUpController } from './signup';
 
-interface SutTypes {
-  sut: SignUpController;
-  emailValidatorStub: EmailValidator;
-}
-
-const makeSut = (): SutTypes => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid(email: string): boolean {
-      return true;
-    }
-  }
-
-  const emailValidatorStub = new EmailValidatorStub();
-  const sut = new SignUpController(emailValidatorStub);
-  return {
-    sut,
-    emailValidatorStub,
-  };
-};
-
 describe('SignUp Controller', () => {
+  let sut: SignUpController;
+  let emailValidatorStub: EmailValidator;
+
+  beforeEach(() => {
+    class EmailValidatorStub implements EmailValidator {
+      isValid(email: string): boolean {
+        return true;
+      }
+    }
+
+    emailValidatorStub = new EmailValidatorStub();
+    sut = new SignUpController(emailValidatorStub);
+  });
+
   test('Should return 400 if no name is provided', () => {
-    const { sut } = makeSut();
     const httpRequest = {
       body: {
         email: 'email@domain.com',
@@ -41,7 +34,6 @@ describe('SignUp Controller', () => {
   });
 
   test('Should return 400 if no email is provided', () => {
-    const { sut } = makeSut();
     const httpRequest = {
       body: {
         name: 'name',
@@ -57,7 +49,6 @@ describe('SignUp Controller', () => {
   });
 
   test('Should return 400 if no password is provided', () => {
-    const { sut } = makeSut();
     const httpRequest = {
       body: {
         name: 'name',
@@ -73,7 +64,6 @@ describe('SignUp Controller', () => {
   });
 
   test('Should return 400 if no passwordConfirmation is provided', () => {
-    const { sut } = makeSut();
     const httpRequest = {
       body: {
         name: 'name',
@@ -91,8 +81,6 @@ describe('SignUp Controller', () => {
   });
 
   test('Should return 400 if an invalid email is provided', () => {
-    const { sut, emailValidatorStub } = makeSut();
-
     const httpRequest = {
       body: {
         name: 'name',
@@ -111,8 +99,6 @@ describe('SignUp Controller', () => {
   });
 
   test('Should call emailValidator with correct email', () => {
-    const { sut, emailValidatorStub } = makeSut();
-
     const httpRequest = {
       body: {
         name: 'name',
