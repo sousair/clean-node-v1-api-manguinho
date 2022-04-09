@@ -6,6 +6,7 @@
   "rules": {
     "semi": [2, "always"],
     "@typescript-eslint/semi": [2, "always"],
+    "@typescript-eslint/camelcase": "off",
     "comma-dangle": ["error", "always-multiline"]
   }
 }
