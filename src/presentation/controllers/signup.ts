@@ -1,9 +1,9 @@
-import { ServerError } from './../errors/server-error';
-import { InvalidParamError } from './../errors/invalid-param-error';
-import { EmailValidator } from './../protocols/email-validator';
 import { MissingParamError } from '../errors/missing-param-error';
-import { BadRequest } from '../helpers/http-helpers';
+import { badRequest } from '../helpers/http-helpers';
+import { InvalidParamError } from './../errors/invalid-param-error';
+import { serverError } from './../helpers/http-helpers';
 import { Controller } from './../protocols/controller';
+import { EmailValidator } from './../protocols/email-validator';
 import { HttpRequest, HttpResponse } from './../protocols/http';
 
 export class SignUpController implements Controller {
@@ -20,12 +20,12 @@ export class SignUpController implements Controller {
 
       for (const field of requiredField) {
         if (!httpRequest.body[field]) {
-          return BadRequest(new MissingParamError(field));
+          return badRequest(new MissingParamError(field));
         }
       }
 
       if (!this.emailValidator.isValid(httpRequest.body.email)) {
-        return BadRequest(new InvalidParamError('email'));
+        return badRequest(new InvalidParamError('email'));
       }
 
       return {
@@ -33,10 +33,7 @@ export class SignUpController implements Controller {
         body: '',
       };
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: new ServerError(),
-      };
+      return serverError();
     }
   }
 }
