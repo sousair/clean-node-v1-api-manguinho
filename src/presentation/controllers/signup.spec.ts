@@ -1,3 +1,5 @@
+import { AccountModel } from '../../domain/models/account';
+import { AddAccount, AddAccountModel } from '../../domain/useCases/add-account';
 import { InvalidParamError, MissingParamError, ServerError } from '../errors';
 import { EmailValidator } from './../protocols';
 import { SignUpController } from './signup';
@@ -5,6 +7,7 @@ import { SignUpController } from './signup';
 describe('SignUp Controller', () => {
   let sut: SignUpController;
   let emailValidatorStub: EmailValidator;
+  let addAccountStub: AddAccount;
 
   beforeEach(() => {
     class EmailValidatorStub implements EmailValidator {
@@ -13,8 +16,21 @@ describe('SignUp Controller', () => {
       }
     }
 
+    class AddAccountStub implements AddAccount {
+      add(account: AddAccountModel): AccountModel {
+        const fakeAccount = {
+          id: 'validId',
+          name: 'validName',
+          email: 'validEmail@domain.com',
+          password: 'validPassword',
+        };
+        return fakeAccount;
+      }
+    }
+
     emailValidatorStub = new EmailValidatorStub();
-    sut = new SignUpController(emailValidatorStub);
+    addAccountStub = new AddAccountStub();
+    sut = new SignUpController(emailValidatorStub, addAccountStub);
   });
 
   test('Should return 400 if no name is provided', () => {
@@ -115,7 +131,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toStrictEqual(new InvalidParamError('email'));
   });
 
-  test('Should call emailValidator with correct email', () => {
+  test('Should call EmailValidator with correct email', () => {
     const httpRequest = {
       body: {
         name: 'name',
@@ -150,5 +166,26 @@ describe('SignUp Controller', () => {
 
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toStrictEqual(new ServerError());
+  });
+
+  test('Should call AddAccount with correct values', () => {
+    const httpRequest = {
+      body: {
+        name: 'name',
+        email: 'email@domain.com',
+        password: 'password',
+        passwordConfirmation: 'password',
+      },
+    };
+
+    const addSpy = jest.spyOn(addAccountStub, 'add');
+
+    sut.handle(httpRequest);
+
+    expect(addSpy).toHaveBeenCalledWith({
+      name: httpRequest.body.name,
+      email: httpRequest.body.email,
+      password: httpRequest.body.password,
+    });
   });
 });
