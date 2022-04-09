@@ -1,5 +1,10 @@
 {
-  "extends": "standard-with-typescript",
+  "extends": [
+    "eslint:recommended",
+    "standard-with-typescript",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
@@ -9,6 +14,16 @@
     "@typescript-eslint/semi": [2, "always"],
     "@typescript-eslint/camelcase": "off",
     "comma-dangle": ["error", "always-multiline"],
-    "@typescript-eslint/strict-boolean-expressions": "off"
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/member-delimiter-style": ["error", {
+      "multiline": {
+        "delimiter": "semi",
+        "requireLast": true
+      },
+      "singleline": {
+        "delimiter": "semi",
+        "requireLast": true
+      }
+    }]
   }
 }
