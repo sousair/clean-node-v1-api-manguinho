@@ -1,7 +1,6 @@
 import { DbAddAccount } from './db-add-account';
 import {
   AccountModel,
-  AddAccount,
   AddAccountModel,
   Encrypter,
   AddAccountRepository,
@@ -14,7 +13,7 @@ describe('DbAddAccount UseCase', () => {
     password: 'password',
   };
 
-  let sut: AddAccount;
+  let sut: DbAddAccount;
   let encrypterStub: Encrypter;
   let addAccountRepositoryStub: AddAccountRepository;
 

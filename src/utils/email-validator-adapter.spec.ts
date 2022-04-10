@@ -1,9 +1,8 @@
-import { EmailValidator } from '../presentation/protocols/email-validator';
 import { EmailValidatorAdapter } from './email-validator-adapter';
 import validator from 'validator';
 
 describe('EmailValidator Adapter', () => {
-  let sut: EmailValidator;
+  let sut: EmailValidatorAdapter;
 
   beforeEach(() => {
     sut = new EmailValidatorAdapter();
