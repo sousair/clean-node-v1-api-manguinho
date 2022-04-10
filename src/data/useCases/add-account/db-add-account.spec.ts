@@ -1,6 +1,5 @@
-import { AddAccount } from '../../../domain/useCases/add-account';
-import { Encrypter } from '../../protocols/encrypter';
 import { DbAddAccount } from './db-add-account';
+import { AddAccount, Encrypter } from './db-add-account-protocols';
 
 describe('DbAddAccount UseCase', () => {
   let sut: AddAccount;
