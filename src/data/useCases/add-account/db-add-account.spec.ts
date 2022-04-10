@@ -49,7 +49,7 @@ describe('DbAddAccount UseCase', () => {
   });
 
   test('Should throw if Encrypter throws', async () => {
-    jest.spyOn(encrypterStub, 'encrypt').mockRejectedValue(new Error());
+    jest.spyOn(encrypterStub, 'encrypt').mockRejectedValueOnce(new Error());
 
     const promise = sut.add(accountData);
 
@@ -69,7 +69,7 @@ describe('DbAddAccount UseCase', () => {
   });
 
   test('Should throw if AddAccountRepository throws', async () => {
-    jest.spyOn(addAccountRepositoryStub, 'add').mockRejectedValue(new Error());
+    jest.spyOn(addAccountRepositoryStub, 'add').mockRejectedValueOnce(new Error());
 
     const promise = sut.add(accountData);
 
