@@ -1,6 +1,12 @@
 import bcrypt from 'bcrypt';
 import { BcryptAdapter } from './bcrypt-adapter';
 
+jest.mock('bcrypt', () => ({
+  async hash(): Promise<string> {
+    return Promise.resolve('hashedValue');
+  },
+}));
+
 describe('Bcrypt Adapter', () => {
   let sut: BcryptAdapter;
 
@@ -17,5 +23,11 @@ describe('Bcrypt Adapter', () => {
     await sut.encrypt(valueToHash);
 
     expect(hash).toBeCalledWith(valueToHash, salt);
+  });
+
+  it('Should return a hash on success', async () => {
+    const hashedValue = await sut.encrypt(valueToHash);
+
+    expect(hashedValue).toBe('hashedValue');
   });
 });
