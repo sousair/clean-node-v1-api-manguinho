@@ -8,6 +8,12 @@ import {
 } from './db-add-account-protocols';
 
 describe('DbAddAccount UseCase', () => {
+  const accountData = {
+    name: 'name',
+    email: 'email@domain.com',
+    password: 'password',
+  };
+
   let sut: AddAccount;
   let encrypterStub: Encrypter;
   let addAccountRepositoryStub: AddAccountRepository;
@@ -36,12 +42,6 @@ describe('DbAddAccount UseCase', () => {
   });
 
   test('Should call Encrypter with correct password', async () => {
-    const accountData = {
-      name: 'name',
-      email: 'email@domain.com',
-      password: 'password',
-    };
-
     const encryptSpy = jest.spyOn(encrypterStub, 'encrypt');
 
     await sut.add(accountData);
@@ -50,12 +50,6 @@ describe('DbAddAccount UseCase', () => {
   });
 
   test('Should throw if Encrypter throws', async () => {
-    const accountData = {
-      name: 'name',
-      email: 'email@domain.com',
-      password: 'password',
-    };
-
     jest.spyOn(encrypterStub, 'encrypt').mockRejectedValue(new Error());
 
     const promise = sut.add(accountData);
@@ -64,12 +58,6 @@ describe('DbAddAccount UseCase', () => {
   });
 
   test('Should call AddAccountRepository with correct values', async () => {
-    const accountData = {
-      name: 'name',
-      email: 'email@domain.com',
-      password: 'password',
-    };
-
     const add = jest.spyOn(addAccountRepositoryStub, 'add');
 
     await sut.add(accountData);
@@ -79,5 +67,13 @@ describe('DbAddAccount UseCase', () => {
       email: 'email@domain.com',
       password: 'hashedValue',
     });
+  });
+
+  test('Should throw if AddAccountRepository throws', async () => {
+    jest.spyOn(addAccountRepositoryStub, 'add').mockRejectedValue(new Error());
+
+    const promise = sut.add(accountData);
+
+    await expect(promise).rejects.toThrow();
   });
 });
