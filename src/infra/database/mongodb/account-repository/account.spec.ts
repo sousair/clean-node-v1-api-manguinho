@@ -20,7 +20,8 @@ describe('Account Mongo Repository', () => {
     await mongoHelper.disconnect();
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await mongoHelper.getCollection('accounts').deleteMany({});
     sut = new AccountMongoRepository(mongoHelper);
   });
 
