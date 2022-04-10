@@ -1,4 +1,4 @@
-import { MongoClient, Collection, ObjectId } from 'mongodb';
+import { MongoClient, Collection } from 'mongodb';
 
 export class MongoHelper {
   private client: MongoClient;
@@ -13,9 +13,5 @@ export class MongoHelper {
 
   getCollection(name: string): Collection {
     return this.client.db().collection(name);
-  }
-
-  generateObjectId(): ObjectId {
-    return new ObjectId();
   }
 }
